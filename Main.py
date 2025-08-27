@@ -1,16 +1,17 @@
 import numpy as np
 import mediapipe as mp
-from Function import *
+import Function
+import say_speech
 
 holy_hands = mp.solutions.hands
-cap = cv.VideoCapture(0)
-
+cap = Function.cv.VideoCapture(0)
 with holy_hands.Hands(
-        max_num_hands=1
+        max_num_hands=5
         # Here only one hand is going to be detect (You can change it if you want more hands to be detected)
 ) as hands:
     index_cord = []  # This list stores values for pointer
     while cap.isOpened():
+        sentence = False
         success, image = cap.read()
         if not success:
             print("Ignoring empty camera frame.")
@@ -18,12 +19,12 @@ with holy_hands.Hands(
 
         # To improve performance, optionally mark the image as not writeable
         image.flags.writeable = False
-        image = cv.cvtColor(image, cv.COLOR_BGR2RGB)
+        image = Function.cv.cvtColor(image, Function.cv.COLOR_BGR2RGB)
         results = hands.process(image)
 
         # Draw the hand annotations on the image.
         image.flags.writeable = True
-        image = cv.cvtColor(image, cv.COLOR_RGB2BGR)
+        image = Function.cv.cvtColor(image, Function.cv.COLOR_RGB2BGR)
 
         # Images shape
         imgH, imgW = image.shape[:2]
@@ -37,21 +38,28 @@ with holy_hands.Hands(
                     hand_cordinate.append([index, x_cordinate, y_cordinate])
                 hand_cordinate = np.array(hand_cordinate)
                 # Working on image
-                string = persons_input(hand_cordinate)
-                image = get_fram(image, hand_cordinate, string)
+                string, sentence = Function.persons_input(hand_cordinate)
+                image = Function.get_fram(image, hand_cordinate, string)
         # For pointer
         if string == " D":
             index_cord.append([15, hand_cordinate[8][1], hand_cordinate[8][2]])
         if string == " I" or string == " J":
             index_cord.append([15, hand_cordinate[20][1], hand_cordinate[20][2]])
         for val in index_cord:
-            image = cv.circle(image, (val[1], val[2]), val[0], (255, 255, 255), 1)
+            image = Function.cv.circle(image, (val[1], val[2]), val[0], (255, 255, 255), 1)
             val[0] = val[0] - 1
             if val[0] <= 0:
                 index_cord.remove(val)
         # Flip the image horizontally for a selfie-view display.
-        cv.imshow('Sign Language detection', cv.flip(image, 1))
+        Function.cv.imshow('Sign Language detection', Function.cv.flip(image, 1))
+        # print("the sentence is ", sentence)
+        if sentence:
+            print("i call create mp3")
+            say_speech.create_pm3_file(sentence)
+            sentence = False
 
-        if cv.waitKey(5) & 0xFF == ord('x'):
+        if Function.cv.waitKey(5) & 0xFF == ord('x'):
             break
+
+
 cap.release()
