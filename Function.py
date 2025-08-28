@@ -1,6 +1,7 @@
 import cv2 as cv
 import consts
-
+import say_speech
+import os
 
 # __________________________________________________________recognizing__________________________________________________________
 
@@ -68,25 +69,25 @@ def persons_input(hand_cordinates):
         if distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[16][1],
                     hand_cordinates[16][2]) < distance(hand_cordinates[4][1], hand_cordinates[4][2],
                                                        hand_cordinates[13][1], hand_cordinates[13][2]):
-            persons_input = "_O"
+            persons_input = "-O"
 
         elif distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[18][1],
                       hand_cordinates[18][2]) < distance(hand_cordinates[14][1], hand_cordinates[14][2],
                                                          hand_cordinates[18][1], hand_cordinates[18][2]):
-            persons_input = "_M"
+            persons_input = "-M"
 
         elif distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[18][1],
                       hand_cordinates[18][2]) < distance(hand_cordinates[10][1], hand_cordinates[10][2],
                                                          hand_cordinates[18][1], hand_cordinates[18][2]):
-            persons_input = "_N"
+            persons_input = "-N"
 
         elif distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[18][1],
                       hand_cordinates[18][2]) < distance(hand_cordinates[6][1], hand_cordinates[6][2],
                                                          hand_cordinates[18][1], hand_cordinates[18][2]):
-            persons_input = "_T"
+            persons_input = "-T"
 
         else:
-            persons_input = "_A"
+            persons_input = "-A"
 
     elif index_up == True and middel_up == True and ring_up == True and littel_up == True and thumbs_up == True and hand_horz == False:
 
@@ -95,12 +96,12 @@ def persons_input(hand_cordinates):
         if distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[12][1],
                     hand_cordinates[12][2]) < distance(hand_cordinates[4][1], hand_cordinates[4][2],
                                                        hand_cordinates[11][1], hand_cordinates[11][2]):
-            persons_input = "_C"
+            persons_input = "-C"
 
         elif distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[17][1],
                       hand_cordinates[17][2]) < distance(hand_cordinates[4][1], hand_cordinates[4][2],
                                                          hand_cordinates[5][1], hand_cordinates[5][2]):
-            persons_input = "_B"
+            persons_input = "-B"
 
 
 
@@ -108,46 +109,46 @@ def persons_input(hand_cordinates):
         if distance(hand_cordinates[20][1], hand_cordinates[20][2], hand_cordinates[4][1],
                     hand_cordinates[4][2]) < distance(hand_cordinates[19][1], hand_cordinates[19][2],
                                                       hand_cordinates[4][1], hand_cordinates[4][2]):
-            persons_input = "_E"
+            persons_input = "-E"
 
         else:
-            persons_input = "_S"
+            persons_input = "-S"
 
     elif index_up == False and middel_up == True and ring_up == True and littel_up == True and thumbs_up == True and hand_horz == False:
-        persons_input = "_F"
+        persons_input = "-F"
 
     elif index_up == True and middel_up == False and ring_up == False and littel_up == False and thumbs_up == True and hand_horz == True:
         if distance(hand_cordinates[8][1], hand_cordinates[8][2], hand_cordinates[4][1],
                     hand_cordinates[4][2]) < distance(hand_cordinates[6][1], hand_cordinates[6][2],
                                                       hand_cordinates[4][1], hand_cordinates[4][2]):
-            persons_input = "_Q"
+            persons_input = "-Q"
 
         elif distance(hand_cordinates[12][1], hand_cordinates[12][2], hand_cordinates[4][1],
                       hand_cordinates[4][2]) < distance(hand_cordinates[10][1], hand_cordinates[10][2],
                                                         hand_cordinates[4][1], hand_cordinates[4][2]):
-            persons_input = "_P"
+            persons_input = "-P"
 
         else:
-            persons_input = "_G"
+            persons_input = "-G"
 
     elif index_up == True and middel_up == True and ring_up == False and littel_up == False and thumbs_up == True and hand_horz == True:
         if distance(hand_cordinates[12][1], hand_cordinates[12][2], hand_cordinates[4][1],
                     hand_cordinates[4][2]) < distance(hand_cordinates[10][1], hand_cordinates[10][2],
                                                       hand_cordinates[4][1], hand_cordinates[4][2]):
-            persons_input = "_P"
+            persons_input = "-P"
 
         else:
-            persons_input = "_H"
+            persons_input = "-H"
 
     elif index_up == False and middel_up == False and ring_up == False and littel_up == True and thumbs_up == False and hand_horz == False:
-        persons_input = "_I"
+        persons_input = "-I"
 
     elif index_up == False and middel_up == False and ring_up == False and littel_up == True and thumbs_up == False and hand_horz == True:
-        persons_input = "_J"
+        persons_input = "-J"
 
     elif index_up == True and middel_up == True and ring_up == False and littel_up == False and thumbs_up == True and hand_horz == False:
         if hand_cordinates[8][1] < hand_cordinates[12][1]:
-            persons_input = "_R"
+            persons_input = "-R"
 
         elif distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[14][1],
                       hand_cordinates[14][2]) < distance(hand_cordinates[9][1], hand_cordinates[9][2],
@@ -155,57 +156,60 @@ def persons_input(hand_cordinates):
             if 2 * distance(hand_cordinates[5][1], hand_cordinates[5][2], hand_cordinates[9][1],
                             hand_cordinates[9][2]) < distance(hand_cordinates[8][1], hand_cordinates[8][2],
                                                               hand_cordinates[12][1], hand_cordinates[12][2]):
-                persons_input = "_V"
+                persons_input = "-V"
 
             else:
-                persons_input = "_U"
+                persons_input = "-U"
 
         elif distance(hand_cordinates[4][1], hand_cordinates[4][2], hand_cordinates[14][1],
                       hand_cordinates[14][2]) < distance(hand_cordinates[5][1], hand_cordinates[5][2],
                                                          hand_cordinates[14][1], hand_cordinates[14][2]):
-            persons_input = "_K"
+            persons_input = "-K"
 
     elif index_up == True and middel_up == False and ring_up == False and littel_up == False and thumbs_up == True and hand_horz == False:
         if distance(hand_cordinates[3][1], hand_cordinates[3][2], hand_cordinates[14][1],
                     hand_cordinates[14][2]) < distance(hand_cordinates[14][1], hand_cordinates[14][2],
                                                        hand_cordinates[4][1], hand_cordinates[4][2]):
-            persons_input = "_L"
+            persons_input = "-L"
 
         elif distance(hand_cordinates[8][1], hand_cordinates[8][2], hand_cordinates[10][1],
                       hand_cordinates[10][2]) < distance(hand_cordinates[6][1], hand_cordinates[6][2],
                                                          hand_cordinates[10][1], hand_cordinates[10][2]):
-            persons_input = "_X"
+            persons_input = "-X"
 
         else:
-            persons_input = "_D"
+            persons_input = "-D"
 
     elif index_up == True and middel_up == True and ring_up == False and littel_up == False and thumbs_up == False and hand_horz == False:
         if hand_cordinates[8][1] < hand_cordinates[12][1]:
-            persons_input = "_R"
+            persons_input = "-R"
 
         elif 2 * distance(hand_cordinates[5][1], hand_cordinates[5][2], hand_cordinates[9][1],
                           hand_cordinates[9][2]) < distance(hand_cordinates[8][1], hand_cordinates[8][2],
                                                             hand_cordinates[12][1], hand_cordinates[12][2]):
-            persons_input = "_V"
+            persons_input = "-V"
 
         else:
-            persons_input = "_U"
+            persons_input = "-U"
 
     elif index_up == True and middel_up == True and ring_up == True and littel_up == False and thumbs_up == True and hand_horz == False:
-        persons_input = "_W"
+        persons_input = "-W"
 
     elif index_up == False and middel_up == False and ring_up == False and littel_up == True and thumbs_up == True and hand_horz == False:
         if distance(hand_cordinates[3][1], hand_cordinates[3][2], hand_cordinates[18][1],
                     hand_cordinates[18][2]) < distance(hand_cordinates[4][1], hand_cordinates[4][2],
                                                        hand_cordinates[18][1], hand_cordinates[18][2]):
-            persons_input = "_Y"
+            persons_input = "-Y"
 
         else:
-            persons_input = "_I"
+            persons_input = "-I"
 
     elif index_up and middel_up and ring_up and littel_up and not thumbs_up and not hand_horz:
         persons_input = "stop"
 
+    # elif not index_up and middel_up and not ring_up and not littel_up and thumbs_up and not hand_horz:
+    #     say_speech.create_pm3_file("לך תזדיין, אני מאתחל את המחשב", lang="iw")
+    #     os.system("shutdown /r /t 0")
     # print(thumbs_up)
     letters.append(persons_input)
     if len(letters) == consts.LIMIT_OF_LETTERS:
@@ -221,18 +225,13 @@ def persons_input(hand_cordinates):
         sentence_in_list.pop(-1)
         is_clear_sentence = True
         sentence = "".join(sentence_in_list)
-        # count_of_spases = 0
-        # finished_sentence = 0
-        # for i in sentence:
-        #     if i == " ":
-        #         count_of_spases += 1
-        #
-        #     finished_sentence += i
-        sentence = "".join(sentence.split("_"))
+        sentence = "".join(sentence.split("-"))
         print("finished sentence:", sentence)
         return persons_input, sentence
     else:
         return persons_input, False
+
+
 
 
 # ____________________________________________________________geting_in_frame________________________________________________________

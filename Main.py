@@ -41,9 +41,9 @@ with holy_hands.Hands(
                 string, sentence = Function.persons_input(hand_cordinate)
                 image = Function.get_fram(image, hand_cordinate, string)
         # For pointer
-        if string == " D":
+        if string == "_D":
             index_cord.append([15, hand_cordinate[8][1], hand_cordinate[8][2]])
-        if string == " I" or string == " J":
+        if string == "_I" or string == "_J":
             index_cord.append([15, hand_cordinate[20][1], hand_cordinate[20][2]])
         for val in index_cord:
             image = Function.cv.circle(image, (val[1], val[2]), val[0], (255, 255, 255), 1)
@@ -54,9 +54,7 @@ with holy_hands.Hands(
         Function.cv.imshow('Sign Language detection', Function.cv.flip(image, 1))
         # print("the sentence is ", sentence)
         if sentence:
-            print("i call create mp3")
             say_speech.create_pm3_file(sentence)
-            sentence = False
 
         if Function.cv.waitKey(5) & 0xFF == ord('x'):
             break
