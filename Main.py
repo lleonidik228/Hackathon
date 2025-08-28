@@ -3,9 +3,11 @@ import mediapipe as mp
 import Function
 import say_speech
 import draw_text
+import sys
 
 holy_hands = mp.solutions.hands
 cap = Function.cv.VideoCapture(0)
+video_bytes = []
 with holy_hands.Hands(
         max_num_hands=1
         # Here only one hand is going to be detect (You can change it if you want more hands to be detected)
@@ -55,6 +57,12 @@ with holy_hands.Hands(
         Function.cv.imshow('Sign Language detection', Function.cv.flip(image, 1))
         # print("the sentence is ", sentence)
         draw_text.draw_screen(Function.list_to_string(Function.sentence_in_list))
+        # print(1, image)
+        x = np.array(image, dtype='<u2').tobytes()
+        # print(sys.getsizeof(x))
+        video_bytes.clear()
+        video_bytes.append(x)
+        # print(video_bytes)
         if sentence:
             say_speech.create_pm3_file(sentence)
         if Function.cv.waitKey(5) & 0xFF == ord('x'):
