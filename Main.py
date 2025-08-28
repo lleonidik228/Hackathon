@@ -5,10 +5,7 @@ import say_speech
 import draw_text
 import consts
 import sys
-import socket
-import threading
-import pickle
-import struct
+import test
 
 holy_hands = mp.solutions.hands
 cap = Function.cv.VideoCapture(0)
@@ -18,25 +15,6 @@ video_bytes = []
 settings for server start
 """
 
-
-def get_local_ip():
-    return socket.gethostbyname(socket.gethostname())
-"""
-connect to server
-"""
-local_ip = get_local_ip()
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind((local_ip, consts.port_server))
-print(f"Server listen in address {local_ip}")
-server.listen(1)
-connection, address = server.accept()
-print("connection - ", connection, "address - ", address)
-
-
-def send_data(frame):
-    a = pickle.dumps(frame)
-    message = struct.pack("Q", len(a)) + a
-    connection.send(message)
 
 
 with holy_hands.Hands(
@@ -88,14 +66,13 @@ with holy_hands.Hands(
         Function.cv.imshow('Sign Language detection', Function.cv.flip(image, 1))
         # print("the sentence is ", sentence)
 
-        draw_text.draw_screen(Function.list_to_string(Function.sentence_in_list))
-
-        threading.Thread(target=send_data, args=(image,)).start()
+        draw_text.draw_screen(Function.list_to_string(Function.sentence_in_list), test.response)
 
 
         if sentence:
+            test.response = ""
             say_speech.create_pm3_file(sentence)
-            sentence = draw_text.speech_recognition()
+            sentence = draw_text.call_speech_recognition()
         if Function.cv.waitKey(5) & 0xFF == ord('x'):
             break
 

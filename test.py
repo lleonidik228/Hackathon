@@ -1,7 +1,6 @@
 import sys
 import pygame
 import speech_recognition as sr
-
 # Initialize Pygame and the mixer
 pygame.init()
 pygame.mixer.init()
@@ -18,8 +17,11 @@ WHITE = (255, 255, 255)
 # Initialize the speech recognizer
 recognizer = sr.Recognizer()
 
+response = ""
+
 # Function to recognize voice and return text
 def recognize_speech_from_mic(recognizer, microphone):
+    global response
     with microphone as source:
         recognizer.adjust_for_ambient_noise(source)
         print('Ready to listen...')
