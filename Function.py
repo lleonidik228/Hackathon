@@ -235,6 +235,7 @@ def persons_input(hand_cordinates):
 def list_to_string(my_list):
     sentence = "".join(my_list)
     sentence = "".join(sentence.split("-"))
+    sentence = sentence.replace(' ', '-')
     return sentence
 
 

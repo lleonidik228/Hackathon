@@ -17,10 +17,13 @@ def create_pm3_file(text=None, lang="en"):
         text = input("enter text: ")
     language = lang
     print(text)
-    text = gTTS(text=text, lang=language, slow=False)
-    text.save("user_sentence.mp3")
-    play_sound("user_sentence.mp3")
-    # play_sound("hello_mother.mp3")
+    if text == len(text) * " ":
+        text = gTTS(text="none", lang=language, slow=False)
+    else:
+        text = gTTS(text=text, lang=language, slow=False)
+        text.save("user_sentence.mp3")
+        play_sound("user_sentence.mp3")
+        # play_sound("hello_mother.mp3")
 
 
 def play_sound(name_file):

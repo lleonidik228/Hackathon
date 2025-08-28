@@ -95,6 +95,7 @@ with holy_hands.Hands(
 
         if sentence:
             say_speech.create_pm3_file(sentence)
+            sentence = draw_text.speech_recognition()
         if Function.cv.waitKey(5) & 0xFF == ord('x'):
             break
 

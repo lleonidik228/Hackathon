@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import consts
+import test
 
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
@@ -10,6 +11,7 @@ pygame.init()
 
 size = consts.PYGAME_SCREEN_SIZE
 screen = pygame.display.set_mode(size)
+pygame.display.set_caption('sentence')
 
 def draw_screen(sentence):
     screen.fill(consts.PYGAME_BACKGROUND_COLOR)
@@ -26,3 +28,11 @@ def draw_screen(sentence):
 
 # while True:
 #     draw_screen("test")
+
+def speech_recognition():
+    while True:
+        response = test.recognize_speech_from_mic(test.recognizer, test.sr.Microphone())
+        if response is not None:
+            print(response)
+            return response
+
