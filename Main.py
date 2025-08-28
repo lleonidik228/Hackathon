@@ -6,7 +6,7 @@ import say_speech
 holy_hands = mp.solutions.hands
 cap = Function.cv.VideoCapture(0)
 with holy_hands.Hands(
-        max_num_hands=5
+        max_num_hands=1
         # Here only one hand is going to be detect (You can change it if you want more hands to be detected)
 ) as hands:
     index_cord = []  # This list stores values for pointer
