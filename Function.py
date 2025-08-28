@@ -232,6 +232,10 @@ def persons_input(hand_cordinates):
         return persons_input, False
 
 
+def list_to_string(my_list):
+    sentence = "".join(my_list)
+    sentence = "".join(sentence.split("-"))
+    return sentence
 
 
 # ____________________________________________________________geting_in_frame________________________________________________________
@@ -281,3 +285,4 @@ def get_fram(image, hand_cordinate, string):
                            (x_max(hand_cordinate) + 7, y_min(hand_cordinate) - 7), string)
 
     return image
+

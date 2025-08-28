@@ -2,6 +2,7 @@ import numpy as np
 import mediapipe as mp
 import Function
 import say_speech
+import draw_text
 
 holy_hands = mp.solutions.hands
 cap = Function.cv.VideoCapture(0)
@@ -53,9 +54,9 @@ with holy_hands.Hands(
         # Flip the image horizontally for a selfie-view display.
         Function.cv.imshow('Sign Language detection', Function.cv.flip(image, 1))
         # print("the sentence is ", sentence)
+        draw_text.draw_screen(Function.list_to_string(Function.sentence_in_list))
         if sentence:
             say_speech.create_pm3_file(sentence)
-
         if Function.cv.waitKey(5) & 0xFF == ord('x'):
             break
 

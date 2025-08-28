@@ -31,13 +31,15 @@ send video
 s=""
 cap = cv2.VideoCapture(0)
 
-while True:
+while cap.isOpened():
     ret, frame = cap.read()
     cv2.imshow('frame', frame)
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    d = frame.flatten()
-    s = d.tostring()
-    for i in range(20):
-        connection.send()
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    cv2.flip(frame, 1)
+    # d = frame.flatten()
+    # s = d.tostring()
+    # print(s)
+
+    # for i in range(20):
+    #     connection.send(s)
+    #     if cv2.waitKey(1) & 0xFF == ord('q'):
+    #         break

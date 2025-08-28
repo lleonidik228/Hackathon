@@ -15,4 +15,5 @@ get video
 """
 
 while True:
+    print(client.recv(1024).decode())
     print("Wait data")
