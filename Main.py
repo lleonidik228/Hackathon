@@ -3,11 +3,42 @@ import mediapipe as mp
 import Function
 import say_speech
 import draw_text
+import consts
 import sys
+import socket
+import threading
+import pickle
+import struct
 
 holy_hands = mp.solutions.hands
 cap = Function.cv.VideoCapture(0)
 video_bytes = []
+
+"""
+settings for server start
+"""
+
+
+def get_local_ip():
+    return socket.gethostbyname(socket.gethostname())
+"""
+connect to server
+"""
+local_ip = get_local_ip()
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((local_ip, consts.port_server))
+print(f"Server listen in address {local_ip}")
+server.listen(1)
+connection, address = server.accept()
+print("connection - ", connection, "address - ", address)
+
+
+def send_data(frame):
+    a = pickle.dumps(frame)
+    message = struct.pack("Q", len(a)) + a
+    connection.send(message)
+
+
 with holy_hands.Hands(
         max_num_hands=1
         # Here only one hand is going to be detect (You can change it if you want more hands to be detected)
@@ -56,17 +87,18 @@ with holy_hands.Hands(
         # Flip the image horizontally for a selfie-view display.
         Function.cv.imshow('Sign Language detection', Function.cv.flip(image, 1))
         # print("the sentence is ", sentence)
+
         draw_text.draw_screen(Function.list_to_string(Function.sentence_in_list))
-        # print(1, image)
-        x = np.array(image, dtype='<u2').tobytes()
-        # print(sys.getsizeof(x))
-        video_bytes.clear()
-        video_bytes.append(x)
-        # print(video_bytes)
+
+        threading.Thread(target=send_data, args=(image,)).start()
+
+
         if sentence:
             say_speech.create_pm3_file(sentence)
         if Function.cv.waitKey(5) & 0xFF == ord('x'):
             break
 
 
+
 cap.release()
+

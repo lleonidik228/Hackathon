@@ -1,74 +1,48 @@
-# import socket
-# import consts
-# import numpy as np
-# import cv2
-#
-#
-# def get_local_ip():
-#     return socket.gethostbyname(socket.gethostname())
-#
-#
-# """
-# connect to server
-# """
-#
-# local_ip = get_local_ip()
-#
-#
-# server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# server.bind((local_ip, consts.port_server))
-#
-# print(f"Server listen in address {local_ip}")
-# server.listen(1)
-# connection, address = server.accept()
-#
-# print("connection - ", connection, "address - ", address)
-#
-# """
-# send video
-# """
-#
-# s=""
-# cap = cv2.VideoCapture(0)
-#
-# while cap.isOpened():
-#     ret, frame = cap.read()
-#     cv2.imshow('frame', frame)
-#     cv2.flip(frame, 1)
-#     # d = frame.flatten()
-#     # s = d.tostring()
-#     # print(s)
-#
-#     # for i in range(20):
-#     #     connection.send(s)
-#     #     if cv2.waitKey(1) & 0xFF == ord('q'):
-#     #         break
+import socket
+import cv2
+import pickle
+import struct
+import threading
+import consts
+import sys
 
 
-import numpy as np
-import cv2 as cv
+# Socket Create
+# family = socket.AF_INET
+# protocol = socket.SOCK_STREAM
+# serv = socket.socket(family, protocol)
 
-cap = cv.VideoCapture(0)
-if not cap.isOpened():
-    print("Cannot open camera")
-    exit()
+# binding ip address with the port
+# serv.bind((consts.ip_server, 9647))
+# serv.listen(1)
+
+sockUDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# sockUDP.bind((consts.ip_server, consts.port_server))
+
+
+def send_data(message):
+    # print(sys.getsizeof(message))
+    # num = sys.getsizeof(message) // 921806
+    with open("timed_file.txt", "wb") as file:
+        file.write(message)
+
+    with open("timed_file.txt", "rb")as file:
+        data = file.read(4096)
+        print("send data")
+        sockUDP.sendto(data, (consts.ip_server, consts.port_server))
+
+
+# sending photo as a video to the client
 while True:
-    # Capture frame-by-frame
-    ret, frame = cap.read()
+    cap = cv2.VideoCapture(0)
+    while (cap.isOpened()):
+        img, frame = cap.read()
+        a = pickle.dumps(frame)
+        message = struct.pack("Q", len(a)) + a
+        # threading.Thread(target=send_data, args=(message,)).start()
+        send_data(message)
+        cv2.imshow('Video from Server', frame)
 
-    # if frame is read correctly ret is True
-    if not ret:
-        print("Can't receive frame (stream end?). Exiting ...")
-        break
-    # Our operations on the frame come here
-
-    frame.flags.writeable = True
-    frame = cv.cvtColor(frame, cv.COLOR_RGB2BGR)
-    # Display the resulting frame
-    cv.imshow('frame', frame)
-    if cv.waitKey(1) == ord('q'):
-        break
-
-# When everything done, release the capture
-cap.release()
-cv.destroyAllWindows()
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord('q'):
+            sockUDP.close()

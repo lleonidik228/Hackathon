@@ -5,6 +5,6 @@ PYGAME_SCREEN_SIZE = (500, 50)
 PYGAME_BACKGROUND_COLOR = (0, 0, 0)
 
 
-ip_server = '10.170.52.13'
-port_server = 5555
+ip_server = '10.170.52.232'
+port_server = 9647
 
