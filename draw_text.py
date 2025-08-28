@@ -8,7 +8,7 @@ my_font = pygame.font.SysFont('Comic Sans MS', 30)
 
 pygame.init()
 
-size = (700, 500)
+size = consts.PYGAME_SCREEN_SIZE
 screen = pygame.display.set_mode(size)
 
 def draw_screen(sentence):
